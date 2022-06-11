@@ -30,14 +30,17 @@ class PostController < ApplicationController
                     t = Tag.find(j.tag_id)
                     tag['tag'].push(t)
                 end
-                tags.push(tag)
-                like = i.attributes
-                like['like'] = []
+                user = User.find(i.user_id)
+                tag['user_name'] = i.attributes
+                tag['user_name'] = user
+                tag['likes'] = []
                 l_like = Like.where(post_id: i.id)
                 for j in l_like do
                     l = Like.find(j.id)
-                    like['like'].push(l)
+                    tag['likes'].push(l)
                 end
+                tag['count'] = l_like.length
+                tags.push(tag)
                 # tags.push(like)
         end
 
@@ -47,15 +50,26 @@ class PostController < ApplicationController
         posts = Post.where(user_id: params[:id])
         tags = []
         for i in posts do
-                tag = i.attributes
-                tag['tag'] = []
-                p_tags = Posttag.where(post_id: i.id)
-                for j in p_tags do
-                    t = Tag.find(j.tag_id)
-                    tag['tag'].push(t)
-                end
-                tags.push(tag)
-        end
+            tag = i.attributes
+            tag['tag'] = []
+            p_tags = Posttag.where(post_id: i.id)
+            for j in p_tags do
+                t = Tag.find(j.tag_id)
+                tag['tag'].push(t)
+            end
+            user = User.find(i.user_id)
+            tag['user_name'] = i.attributes
+            tag['user_name'] = user
+            tag['likes'] = []
+            l_like = Like.where(post_id: i.id)
+            for j in l_like do
+                l = Like.find(j.id)
+                tag['likes'].push(l)
+            end
+            tag['count'] = l_like.length
+            tags.push(tag)
+            # tags.push(like)
+        end 
         render json: tags, status: :ok
     end
 
