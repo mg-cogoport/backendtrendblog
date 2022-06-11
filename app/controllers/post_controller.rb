@@ -102,6 +102,7 @@ class PostController < ApplicationController
         end
     end
     def updatePost
+        params[:image] = params[:image].to_json
         post = Post.find(params[:id]).update(params.permit(:parent_id, :title, :content, :image, :publish_date, :status))
         # puts("user", user.errors.full_messages)
         if (post)
